@@ -1,0 +1,31 @@
+.footer{
+  width: 100%;
+  margin: 0 auto;
+  background: #00A5D9;
+}
+
+.footerDiv{
+  padding: 20px 0;
+  text-align: center;
+}
+
+.footerLogos{
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.footerCopyright{
+  color: #FFFFFF;
+  font-size: 14px;
+  text-align: center;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 15px;
+}
+
+.footerGithubLogo{
+  height: 25px;
+}
