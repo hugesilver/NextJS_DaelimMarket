@@ -31,8 +31,9 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
+	min-width: 1280px;
+	background: #FFFFFF;
 	line-height: 1;
-	pointer-events: none;
 	user-drag: none;
 	-webkit-user-drag: none;
 	-ms-user-select: none; 
@@ -42,6 +43,9 @@ body {
   user-select: none;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
+}
+img{
+	pointer-events: none;
 }
 ol, ul {
 	list-style: none;

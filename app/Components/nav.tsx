@@ -1,7 +1,7 @@
 import Image from "next/image";
 import style from "./nav.module.css";
 
-export default function Nav(){
+export default function Nav() {
   return (
     <nav className={style.nav}>
       <div className={style.navDiv}>

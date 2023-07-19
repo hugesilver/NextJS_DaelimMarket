@@ -1,13 +1,14 @@
 .nav{
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: fixed;
+  z-index: 2;
+  background: #FFFFFF;
 }
 
 .navDiv{
-  width: 1280px;
-  margin: 0 20px;
+  width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
