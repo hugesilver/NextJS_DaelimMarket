@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { QueryDocumentSnapshot, collection, getDocs, limit, orderBy, query, startAfter, where } from "firebase/firestore";
-import { db } from "./firebase";
 import Image from "next/image";
-import style from "./home.module.css";
+import style from "./Home.module.css";
 import { format } from "date-fns";
+import Link from "next/link";
+import { db } from "./firebase";
 
 export default function Home() {
   const locationList: Array<string> = [
@@ -30,6 +31,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
   const [products, setProducts] = useState<Array<object | null>>([]);
   const [lastDocument, setLastDocument] = useState<QueryDocumentSnapshot | null>(null);
+
   const getProducts = async () => {
     try {
       let productQuery;
@@ -39,7 +41,7 @@ export default function Home() {
             collection(db, "product"),
             where("status", "<", 2),
             orderBy("status"),
-            orderBy("uploadTime"),
+            orderBy("uploadTime", "desc"),
             limit(limits),
           );
         } else {
@@ -48,7 +50,7 @@ export default function Home() {
             where("title", ">=", inputValue),
             where("title", "<=", `${inputValue}\uf8ff`),
             orderBy('title'),
-            orderBy("uploadTime"),
+            orderBy("uploadTime", "desc"),
             limit(limits),
           );
         }
@@ -60,7 +62,7 @@ export default function Home() {
             where("location", "==", location),
             where("status", "<", 2),
             orderBy("status"),
-            orderBy("uploadTime"),
+            orderBy("uploadTime", "desc"),
             limit(limits),
           );
         } else {
@@ -70,7 +72,7 @@ export default function Home() {
             where("title", "<=", `${inputValue}\uf8ff`),
             where("location", "==", location),
             orderBy('title'),
-            orderBy("uploadTime"),
+            orderBy("uploadTime", "desc"),
             limit(limits),
           );
         }
@@ -80,13 +82,14 @@ export default function Home() {
       productsDocuments.forEach((result) => {
         setProducts((prev) => [...prev, result.data()]);
       });
-      console.log(products);
       setLoading(false);
+      console.log("데이터를 불러옴(home)");
     }
     catch (e) {
-      alert(`에러가 발생하였습니다: ${e}`);
+      alert(`상품 정보를 불러오는 중 에러가 발생하였습니다: ${e}`);
       console.log(e);
       setLoading(false);
+      setProducts([]);
     }
   }
 
@@ -99,7 +102,7 @@ export default function Home() {
             collection(db, "product"),
             where("status", "<", 2),
             orderBy("status"),
-            orderBy("uploadTime"),
+            orderBy("uploadTime", "desc"),
             startAfter(last),
             limit(limits),
           );
@@ -109,7 +112,7 @@ export default function Home() {
             where("title", ">=", inputValue),
             where("title", "<=", `${inputValue}\uf8ff`),
             orderBy('title'),
-            orderBy("uploadTime"),
+            orderBy("uploadTime", "desc"),
             startAfter(last),
             limit(limits),
           );
@@ -121,7 +124,7 @@ export default function Home() {
             where("location", "==", location),
             where("status", "<", 2),
             orderBy("status"),
-            orderBy("uploadTime"),
+            orderBy("uploadTime", "desc"),
             startAfter(last),
             limit(limits),
           );
@@ -132,7 +135,7 @@ export default function Home() {
             where("title", "<=", `${inputValue}\uf8ff`),
             where("location", "==", location),
             orderBy('title'),
-            orderBy("uploadTime"),
+            orderBy("uploadTime", "desc"),
             startAfter(last),
             limit(limits),
           );
@@ -143,25 +146,24 @@ export default function Home() {
       productsDocuments.forEach((result) => {
         setProducts((prev) => [...prev, result.data()]);
       });
-      console.log(products);
       setLoading(false);
+      console.log("데이터를 추가로 불러옴(home)");
     }
     catch (e) {
-      alert(`에러가 발생하였습니다: ${e}`);
+      alert(`데이터를 추가로 불러오던 중 에러가 발생하였습니다: ${e}`);
       console.log(e);
       setLoading(false);
     }
   }
 
-  const resetProducts = () => {
-    setProducts([]);
+  const resetProducts = async () => {
     setLastDocument(null);
-    getProducts();
+    await getProducts();
   }
 
   useEffect(() => {
     resetProducts();
-  }, [location]);
+  }, []);
 
   const priceFormatting = (price: string) => {
     const parsedPrice = parseInt(price, 10);
@@ -203,22 +205,31 @@ export default function Home() {
           {products.length !== 0 ? products.map((value: { [key: string]: any } | null) => {
             if (value != null) {
               return (
-                <div className={style.product} key={value["product_id"]}>
-                  <div className={style.productsImgDiv}>
-                    <img className={style.productsImg} src={value["images"][0]} />
+                <Link href={`/detail/${value["product_id"]}`} key={value["product_id"]}>
+                  <div className={style.product} key={value["product_id"]}>
+                    <div className={style.productsImgDiv}>
+                      <img className={style.productsImg} src={value["images"][0]} />
+                      {
+                        parseInt(value["status"]) > 0 ?
+                          <div className={style.statusDiv}>
+                            {parseInt(value["status"]) == 1 ? <p>예약중</p> : <p>판매완료</p>}
+                          </div> :
+                          <></>
+                      }
+                    </div>
+                    <p className={style.title}>{value["title"]}</p>
+                    <p className={style.loctime}>{value["location"]} | {format(value["uploadTime"].toDate(), 'yy.MM.dd')}</p>
+                    <p className={style.price}>
+                      {
+                        priceFormatting(value["price"])
+                      }
+                    </p>
+                    <div className={style.likes}>
+                      <Image className={style.homeHeartIcon} src="/images/home/icon_heart.svg" alt="좋아요 아이콘" width={14} height={13} />
+                      <span className={style.likesSpan}>{value["likes"].length}</span>
+                    </div>
                   </div>
-                  <p className={style.title}>{value["title"]}</p>
-                  <p className={style.loctime}>{value["location"]} | {format(value["uploadTime"].toDate(), 'yy.MM.dd')}</p>
-                  <p className={style.price}>
-                    {
-                      priceFormatting(value["price"])
-                    }
-                  </p>
-                  <div className={style.likes}>
-                    <Image className={style.homeHeartIcon} src="/images/home/icon_heart.svg" alt="좋아요 아이콘" width={14} height={13} />
-                    <span className={style.likesSpan}>{value["likes"].length}</span>
-                  </div>
-                </div>
+                </Link>
               );
             } else {
               return null;
@@ -230,7 +241,7 @@ export default function Home() {
           )}
           {
             products !== null && products.length % 5 !== 0 ? (
-              Array.from({ length: products.length % 5 + 1 }).map((_, index) => (
+              Array.from({ length: 5 - (products.length % 5) }).map((_, index) => (
                 <div className={style.products} key={index}>
                   <div className={style.productsImgDiv}>
                   </div>

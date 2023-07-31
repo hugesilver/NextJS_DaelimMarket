@@ -2,7 +2,8 @@
   width: 1240px;
   margin: 0 auto;
   padding: 0 20px;
-  min-height: 100vh;
+  padding-top: 120px;
+  min-height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
 }
@@ -147,6 +148,29 @@
   object-position: center;
 }
 
+.statusDiv {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(28, 28, 28, 0.75);
+}
+
+.statusDiv p {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 800;
+  padding: 0;
+  margin: 0;
+}
+
 .title {
   color: #1C1C1C;
   font-size: 21px;
@@ -233,6 +257,6 @@
 .loadingImg {
   display: block;
   margin: 0 auto;
-  width: 170px;
-  height: 50px;
+  width: auto;
+  height: 25px;
 }

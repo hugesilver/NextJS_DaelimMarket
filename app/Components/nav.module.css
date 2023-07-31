@@ -1,11 +1,14 @@
-.nav{
+.nav {
   width: 100%;
   position: fixed;
   z-index: 2;
   background: #FFFFFF;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
-.navDiv{
+.navDiv {
   width: 1240px;
   margin: 0 auto;
   padding: 0 20px;
@@ -16,23 +19,34 @@
   margin-bottom: 29px;
 }
 
-.navLogo{
+.navLogo {
   width: 179px;
   height: 52px;
   flex-shrink: 0;
 }
 
-.navLinks{
+.navLinks {
   display: flex;
   gap: 40px;
+  align-items: center;
 }
 
-.navIcon{
+.navLogged {
+  color: #707070;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.navIcon {
   height: 30px;
   flex-shrink: 0;
 }
 
-.navLine{
+.navLine {
   width: 100%;
   height: 2px;
   background: #ACACAC;

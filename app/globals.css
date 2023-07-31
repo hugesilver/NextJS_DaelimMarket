@@ -24,6 +24,8 @@ time, mark, audio, video {
 	font: inherit;
 	font-family: 'Pretendard';
 	vertical-align: baseline;
+	text-decoration: none;
+	color: inherit;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
@@ -32,6 +34,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	min-width: 1280px;
+	min-height: 720px;
 	background: #FFFFFF;
 	line-height: 1;
 	user-drag: none;
