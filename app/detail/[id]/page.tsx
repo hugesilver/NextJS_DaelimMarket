@@ -5,7 +5,7 @@ import { DocumentData, arrayRemove, arrayUnion, deleteDoc, doc, getDoc, updateDo
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { ko } from 'date-fns/locale';
-import { db, getUserUid } from "@/app/firebase";
+import { db, getUserUid } from "@/app/Firebase";
 import { useRouter } from "next/navigation";
 import { deleteObject, getStorage, listAll, ref } from "firebase/storage";
 
@@ -132,8 +132,10 @@ export default function Detail({ params }: { params: { id: string } }) {
       return parsedPrice.toLocaleString() + '원';
     }
   };
+
   return (
-    <div>
+    <>
+      <title>{document != null ? document["title"] : "대림마켓"}</title>
       <article className={style.article}>
         {
           document != null ?
@@ -223,9 +225,11 @@ export default function Detail({ params }: { params: { id: string } }) {
               <p className={style.detailDesc}>{document["desc"]}</p>
             </>
             :
-            <div></div>
+            <>
+              <span className={style.nullSpan}>정보를 불러올 수 없습니다.</span>
+            </>
         }
       </article>
-    </div>
+    </>
   );
 }

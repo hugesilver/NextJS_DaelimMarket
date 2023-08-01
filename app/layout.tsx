@@ -2,11 +2,6 @@ import Nav from './components/Nav'
 import Footer from './components/Footer'
 import './globals.css'
 
-export const metadata = {
-  title: '대림마켓',
-  description: '',
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -14,6 +9,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" suppressHydrationWarning={true}>
+      <title>대림마켓</title>
       <body suppressHydrationWarning={true}>
         <Nav />
         {children}

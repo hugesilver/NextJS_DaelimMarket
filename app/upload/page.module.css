@@ -1,0 +1,206 @@
+.article {
+  width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px;
+  padding-top: 120px;
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+}
+
+.imageTitle {
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+  gap: 25px;
+}
+
+.h3 {
+  margin-top: 50px;
+  color: #000;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.imageTitle h3 {
+  margin-top: 0;
+}
+
+.uploadDiv {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.uploadDiv div {
+  width: 216px;
+  height: 216px;
+  flex-shrink: 0;
+  border: 2px dashed #1C1C1C;
+  background: #FFFFFF;
+  position: relative;
+}
+
+.uploadImg {
+  width: 216px;
+  height: 216px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.deleteImg{
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 29px;
+  height: 29px;
+  cursor: pointer;
+  z-index: 2;
+  pointer-events: all;
+}
+
+.inputFile {
+  display: none;
+}
+
+.label {
+  display: flex;
+  width: 115px;
+  height: 25px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  background: #00A5D9;
+  color: #FFFFFF;
+  justify-content: center;
+  align-items: center;
+  font-size: 21px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.inputText {
+  margin-top: 30px;
+  width: 100%;
+  height: 50px;
+  flex-shrink: 0;
+  border: 2px solid #1C1C1C;
+  background: #FFFFFF;
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  padding: 0;
+  padding-left: 20px;
+  color: #1C1C1C;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.inputNumber {
+  margin-top: 30px;
+  width: 200px;
+  height: 50px;
+  flex-shrink: 0;
+  border: 2px solid #1C1C1C;
+  background: #FFFFFF;
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  padding: 0;
+  padding-left: 20px;
+  color: #1C1C1C;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.inputNumber[type="number"]::-webkit-outer-spin-button,
+.inputNumber[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+}
+
+.locationDiv {
+  margin-top: 30px;
+  width: 220px;
+  height: 50px;
+  flex-shrink: 0;
+  background: #FFFFFF;
+  border: 2px solid #1C1C1C;
+  position: relative;
+}
+
+.select::-ms-expand {
+  display: none;
+}
+
+.select {
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: inherit;
+  height: inherit;
+  background: transparent;
+  border: 0 none;
+  outline: 0 none;
+  position: relative;
+
+  padding-left: 20px;
+  color: #1C1C1C;
+  font-size: 32px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.homeArrowDownIcon {
+  position: absolute;
+  height: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: 20px;
+}
+
+.textarea {
+  margin-top: 30px;
+  margin-bottom: 100px;
+  width: 100%;
+  height: 400px;
+  flex-shrink: 0;
+  border: 2px solid #1C1C1C;
+  background: #FFFFFF;
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  padding: 0;
+  padding-top: 10px;
+  padding-left: 20px;
+  color: #1C1C1C;
+  font-size: 32px;
+  font-weight: 500;
+  resize: none;
+  font-family: "Pretendard";
+}
+
+.button {
+  margin: 0 auto;
+  margin-bottom: 100px;
+  width: 185px;
+  height: 65px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #00A5D9;
+  border: 0;
+  outline: 0;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  cursor: pointer;
+}

@@ -1,0 +1,263 @@
+.article {
+  width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px;
+  padding-top: 120px;
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+}
+
+.homeTop {
+  margin: 40px 0;
+  display: flex;
+  gap: 20px;
+}
+
+.homeLocationDiv {
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: 2px solid #707070;
+  position: relative;
+}
+
+.select::-ms-expand {
+  display: none;
+}
+
+.select {
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: inherit;
+  height: inherit;
+  background: transparent;
+  border: 0 none;
+  outline: 0 none;
+  position: relative;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 37px;
+
+  color: #1C1C1C;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: normal;
+  cursor: pointer;
+}
+
+.homeArrowDownIcon {
+  position: absolute;
+  height: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: 15px;
+}
+
+.homeSearchDiv {
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  border: 2px solid #707070;
+}
+
+.input {
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 326px;
+  height: inherit;
+  background: transparent;
+  border: 0 none;
+  outline: 0 none;
+  margin: 0;
+  padding: 0;
+  padding-left: 20px;
+
+  color: #1C1C1C;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.homeSearchIconDiv {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.homeSearchIcon {
+  width: 24px;
+  height: 24px;
+  padding-left: 10px;
+  padding-right: 20px;
+}
+
+.locationH1 {
+  color: #707070;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 30px;
+}
+
+.locationBold {
+  color: #1C1C1C;
+  font-weight: 700;
+}
+
+.section {
+  padding-bottom: 90px;
+  flex-grow: 1;
+}
+
+.products {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin-bottom: 55px;
+}
+
+.product {
+  width: 220px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.productsImgDiv {
+  width: 220px;
+  height: 180px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.productsImgDiv>.productsImg {
+  width: 220px;
+  height: 180px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.statusDiv {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(28, 28, 28, 0.75);
+}
+
+.statusDiv p {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 800;
+  padding: 0;
+  margin: 0;
+}
+
+.title {
+  color: #1C1C1C;
+  font-size: 21px;
+  font-weight: 500;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.loctime {
+  color: #ACACAC;
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.price {
+  color: #00A5D9;
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+}
+
+.homeHeartIcon {
+  width: auto;
+  height: 13px;
+  padding-right: 5px;
+}
+
+.likesSpan {
+  color: #ACACAC;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nullDiv {
+  width: 100%;
+  height: 540px;
+  position: relative;
+  display: flex;
+
+}
+
+.nullSpan {
+  color: #707070;
+  font-size: 18px;
+  font-weight: 500;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.moreButton {
+  margin: 0 auto;
+  width: 170px;
+  height: 50px;
+  flex-shrink: 0;
+  border-radius: 29px;
+  background: #ACACAC;
+  position: relative;
+  cursor: pointer;
+}
+
+.moreButton>span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 0;
+}
+
+.loadingImg {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+  height: 25px;
+}

@@ -45,9 +45,19 @@ export default function Nav() {
               <><Link href="/login" className={style.clickable}>로그인</Link>&nbsp;|&nbsp;<Link href="/register" className={style.clickable}>회원가입</Link></>
             }
           </span>
-          <Image className={style.navIcon} src="/images/nav/icon_upload.svg" alt="업로드" width={30} height={30} />
-          <Image className={style.navIcon} src="/images/nav/icon_chat.svg" alt="채팅" width={30} height={30} />
-          <Image className={style.navIcon} src="/images/nav/icon_mypage.svg" alt="마이페이지" width={30} height={30} />
+          {
+            userData != null ?
+              <>
+                <Link href="/upload">
+                  <Image className={style.navIcon} src="/images/nav/icon_upload.svg" alt="업로드" width={30} height={30} />
+                </Link>
+                <Image className={style.navIcon} src="/images/nav/icon_chat.svg" alt="채팅" width={30} height={30} />
+                <Image className={style.navIcon} src="/images/nav/icon_mypage.svg" alt="마이페이지" width={30} height={30} />
+              </> :
+              <>
+              </>
+          }
+
         </div>
       </div>
       <div className={style.navLine}></div>
