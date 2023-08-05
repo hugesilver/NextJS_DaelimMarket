@@ -225,9 +225,7 @@ export default function Detail({ params }: { params: { id: string } }) {
               <p className={style.detailDesc}>{document["desc"]}</p>
             </>
             :
-            <>
-              <span className={style.nullSpan}>정보를 불러올 수 없습니다.</span>
-            </>
+            <span className={style.nullSpan}>정보를 불러올 수 없습니다.</span>
         }
       </article>
     </>
