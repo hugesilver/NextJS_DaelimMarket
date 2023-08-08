@@ -21,6 +21,7 @@ export default function Detail({ params }: { params: { id: string } }) {
   const [dotIndex, setIndex] = useState<number>(0);
   const [status, setStatus] = useState(statusList[0]);
   const [uid, setUid] = useState<string | null>(null);
+  const [profileImg, setProfileImg] = useState<string | null>(null);
 
   const storage = getStorage();
 
@@ -48,6 +49,10 @@ export default function Detail({ params }: { params: { id: string } }) {
     getDocument();
     getUid();
   }, []);
+
+  useEffect(() => {
+    getProfileImage();
+  }, [uid, document])
 
 
   const changeStatus = async (event: any) => {
@@ -133,6 +138,32 @@ export default function Detail({ params }: { params: { id: string } }) {
     }
   };
 
+  const onClickGoToChat = async () => {
+    if(uid != null && document != null){
+      await getDoc(doc(db, 'chat', uid!)).then(async (value: DocumentData) => {
+        if(value[`${document!["uid"]}`] != undefined) {
+          await updateDoc(doc(db, 'chat', uid!), {
+            [document!["uid"]] : []
+          });
+        }
+      });
+    }
+    router.push('/chat');
+  }
+
+  const getProfileImage = async() => {
+    if(uid != null && document != null){
+      try{
+        await getDoc(doc(db, 'user', document!["uid"])).then((value: DocumentData) => {
+          setProfileImg(value.data()["profile_image"]);
+        })
+      } catch(e){
+        alert(`유저의 프로필 사진을 불러오는 중 오류가 발생하였습니다: ${e}`);
+        console.log(e);
+      }
+    }
+  }
+
   return (
     <>
       <title>{document != null ? document["title"] : "대림마켓"}</title>
@@ -160,7 +191,14 @@ export default function Detail({ params }: { params: { id: string } }) {
                   <div className={style.infoesDiv}>
                     <h1 className={style.title}>{document["title"]}</h1>
                     <p className={style.price}>{priceFormatting(document["price"])}</p>
-                    <p className={style.nickname}>{document["nickName"]}</p>
+                    <div className={style.userInfoDiv}>
+                      <div className={style.profileDiv}>
+                        {
+                          profileImg != null && profileImg != '' ? <img src={profileImg} alt={`${document["nickName"]}의 프로필 사진`} /> : null
+                        }
+                      </div>
+                      <p className={style.nickname}>{document["nickName"]}</p>
+                    </div>
                     <p className={style.location}>거래장소: {document["location"]}</p>
                     <p className={style.uploadtime}>등록일: {format(document["uploadTime"].toDate(), 'yyyy년 MM월 dd일 aa h시 mm분 ss초', { locale: ko })}</p>
                     {
@@ -193,7 +231,7 @@ export default function Detail({ params }: { params: { id: string } }) {
                     </div>
                     {
                       document["uid"] != uid ?
-                        <div className={style.chatDiv}>
+                        <div className={style.chatDiv} onClick={() => onClickGoToChat()}>
                           <Image className={style.chatImg} src="/images/detail/icon_chat.svg" alt="채팅 아이콘" width={33} height={29} />
                           <span>채팅하기</span>
                         </div> :

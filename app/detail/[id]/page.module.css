@@ -2,8 +2,8 @@
 	width: 1240px;
 	margin: 0 auto;
 	padding: 0 20px;
-	padding-top: 160px;
-	min-height: calc(100vh - 160px);
+	padding-top: 165px;
+	min-height: calc(100vh - 165px);
 	display: flex;
 	flex-direction: column;
 	position: relative;
@@ -102,15 +102,37 @@
 	font-weight: 700;
 }
 
-.nickname {
+.userInfoDiv{
 	margin-top: 20px;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.profileDiv {
+	width: 42px;
+	height: 42px;
+	border-radius: 50%;
+	background: #ACACAC;
+}
+
+.profileDiv > img {
+	width: 42px;
+	height: 42px;
+	border-radius: 50%;
+	object-fit: cover;
+	object-position: center;
+}
+
+.nickname {
 	color: #1C1C1C;
 	font-size: 24px;
 	font-weight: 500;
+	line-height: normal;
 }
 
 .location {
-	margin-top: 10px;
+	margin-top: 20px;
 	color: #ACACAC;
 	font-size: 18px;
 	font-weight: 500;
