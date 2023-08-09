@@ -1,7 +1,7 @@
 # 대림마켓
 
 <img src="https://github.com/team-ilpalsam/NextJS_DaelimMarket/blob/main/readme/daelimmarket_textless.png" width="300px" height="300px" />
-[ 2023년 1학기 캡스톤디자인 프로젝트 ]
+[ 2023년 여름방학 프로젝트 ]
 <br />
 우리들만의 작은 장터, 대림마켓
 <br />
