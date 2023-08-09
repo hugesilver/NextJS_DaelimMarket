@@ -54,7 +54,9 @@ export default function Nav() {
                 <Link href="/chat">
                   <Image className={style.navIcon} src="/images/nav/icon_chat.svg" alt="채팅" width={30} height={30} />
                 </Link>
-                <Image className={style.navIcon} src="/images/nav/icon_mypage.svg" alt="마이페이지" width={30} height={30} />
+                <Link href="/mypage">
+                  <Image className={style.navIcon} src="/images/nav/icon_mypage.svg" alt="마이페이지" width={30} height={30} />
+                </Link>
               </> :
               null
           }

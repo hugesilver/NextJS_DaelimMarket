@@ -127,7 +127,7 @@ export default function Upload() {
           uid: uid,
           product_id: productId,
           nickName: userData.data()["nickName"],
-          price: parseInt(price),
+          price: price,
           title: title,
           location: location,
           desc: desc,
@@ -141,7 +141,7 @@ export default function Upload() {
         router.push('/');
       } catch (e) {
         alert(`업로드 중 오류가 생겼습니다: ${e}`);
-        router.push('/');
+        
         console.log(e);
       }
     }

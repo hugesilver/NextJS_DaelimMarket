@@ -157,6 +157,7 @@ export default function Root() {
   }
 
   const resetProducts = async () => {
+    setProducts([]);
     setLastDocument(null);
     await getProducts();
   }

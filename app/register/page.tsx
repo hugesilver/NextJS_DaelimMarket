@@ -38,7 +38,7 @@ export default function Register() {
       );
       const nickNameCheck: DocumentData = await getDocs(nicknameQuery);
 
-      if (nickNameCheck != null) {
+      if (nickNameCheck.docs.length == 0) {
         await createUserWithEmailAndPassword(authService, `${email}@email.daelim.ac.kr`, password)
           .then((value) => {
             setDoc(doc(db, "user", value.user.uid), {
@@ -87,6 +87,9 @@ export default function Register() {
                 break;
             }
           });
+      } else {
+        alert('중복된 닉네임이 있습니다.');
+        return;
       }
     }
   }

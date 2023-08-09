@@ -4,123 +4,94 @@
   padding: 0 20px;
   padding-top: 125px;
   min-height: calc(100vh - 125px);
-  display: flex;
-  flex-direction: column;
 }
 
-.homeTop {
-  margin: 40px 0;
-  display: flex;
-  gap: 20px;
-}
-
-.homeLocationDiv {
-  background: #FFFFFF;
-  border-radius: 10px;
-  border: 2px solid #707070;
-  position: relative;
-}
-
-.select::-ms-expand {
-  display: none;
-}
-
-.select {
-  -o-appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  width: inherit;
-  height: inherit;
-  background: transparent;
-  border: 0 none;
-  outline: 0 none;
-  position: relative;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 15px;
-  padding-right: 37px;
-
+.h1 {
+  margin-top: 30px;
   color: #1C1C1C;
-  font-size: 21px;
+  font-size: 48px;
   font-weight: 700;
   line-height: normal;
+}
+
+.profileDiv {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  width: 183px;
+  height: 183px;
+  border-radius: 50%;
+  background-color: #ACACAC;
   cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
 }
 
-.homeArrowDownIcon {
-  position: absolute;
-  height: 10px;
-  top: 50%;
-  transform: translate(0, -50%);
-  right: 15px;
+.profileImg {
+  width: 183px;
+  height: 183px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
 }
 
-.homeSearchDiv {
-  background: #FFFFFF;
-  display: flex;
-  align-items: center;
-  border-radius: 10px;
-  border: 2px solid #707070;
+.p {
+  margin-top: 20px;
+  color: #1C1C1C;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .input {
+  margin-top: 15px;
   -o-appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  width: 326px;
-  height: inherit;
-  background: transparent;
-  border: 0 none;
+  width: 600px;
+  height: 50px;
+  border: 2px solid #1C1C1C;
+  background-color: #FFFFFF;
   outline: 0 none;
-  margin: 0;
-  padding: 0;
-  padding-left: 20px;
 
+  padding-left: 20px;
   color: #1C1C1C;
-  font-size: 21px;
-  font-weight: 700;
-  line-height: normal;
+  font-size: 32px;
+  font-weight: 500;
 }
 
-.homeSearchIconDiv {
+.accountDiv {
+  margin-top: 45px;
+  margin-bottom: 100px;
   display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 0;
+  gap: 30px;
+}
+
+.accountDiv>.save {
+  color: #ACACAC;
+  font-size: 24px;
+  font-weight: 500;
   cursor: pointer;
 }
 
-.homeSearchIcon {
-  width: 24px;
-  height: 24px;
-  padding-left: 10px;
-  padding-right: 20px;
-}
-
-.locationH1 {
-  color: #707070;
-  font-size: 32px;
+.accountDiv>.delete {
+  color: #FF2C2C;
+  font-size: 24px;
   font-weight: 500;
-  line-height: normal;
-  margin-bottom: 30px;
+  cursor: pointer;
 }
 
-.locationBold {
+.h2 {
+  margin-top: 50px;
   color: #1C1C1C;
+  font-size: 48px;
   font-weight: 700;
-}
-
-.section {
-  padding-bottom: 90px;
-  flex-grow: 1;
 }
 
 .products {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
+  margin-top: 30px;
   margin-bottom: 55px;
 }
 
@@ -203,7 +174,7 @@
   margin-left: 5px;
 }
 
-.homeHeartIcon {
+.mypageHeartIcon {
   width: auto;
   height: 13px;
   padding-right: 5px;
@@ -217,7 +188,7 @@
 
 .nullDiv {
   width: 100%;
-  height: 540px;
+  height: 400px;
   position: relative;
   display: flex;
 
@@ -260,4 +231,8 @@
   margin: 0 auto;
   width: auto;
   height: 25px;
+}
+
+.last {
+  margin-bottom: 100px;
 }

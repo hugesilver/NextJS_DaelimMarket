@@ -20,6 +20,7 @@ export default function Chat() {
   const [chatRoom, setChatRoom] = useState<string | null>(null);
   const [userData, setUserData] = useState<{ [key: string]: any }>({});
   const [chat, setChat] = useState<string>('');
+  const [chatFieldScrollTop, setChatFieldScrollTop] = useState<number>(0);
 
   const getUid = async () => {
     try {
@@ -159,7 +160,7 @@ export default function Chat() {
             }
             <div className={style.rightInfo}>
               {
-                readTimeData![`${chatRoom}-${uid}`] != null && chatData![chatRoom!][index]["send_time"].toDate() >= readTimeData![`${chatRoom}-${uid}`].toDate() ?
+                readTimeData![`${chatRoom}-${uid}`] != null && chatData![chatRoom!][index]["send_time"].toDate() <= readTimeData![`${chatRoom}-${uid}`].toDate() ?
                   <span className={style.chatGrey}>읽음</span>
                   : <span className={style.chatGrey}>전송됨</span>
               }
@@ -227,6 +228,44 @@ export default function Chat() {
     return hash;
   }
 
+  const sendAlert = async (body: string) => {
+    try {
+      if (userData![chatRoom!]["token"] != '') {
+        await axios.post(
+          'https://fcm.googleapis.com/fcm/send',
+          {
+            to: userData![chatRoom!]["token"],
+            notification: {
+              title: `${myData!["nickName"]}`,
+              body: `${body}`,
+              android_channel_id: `${hashCode(uid!)}`,
+              sound: 'alert.wav',
+            },
+            aps: {
+              title: `${myData!["nickName"]}`,
+              body: `${body}`,
+              badge: 1,
+            },
+            priority: 'high',
+            data: {
+              click_action: 'FLUTTER_NOTIFICATION_CLICK',
+              id: `${hashCode(uid!)}`,
+              status: 'done',
+            },
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `key=${process.env.NEXT_PUBLIC_SERVER_KEY}`,
+            },
+          }
+        );
+      }
+    } catch (e) {
+      alert(`알림을 전송하는 중 오류가 발생하였습니다: ${e}`);
+    }
+  }
+
   const sendChat = async () => {
     if (chat != '') {
       try {
@@ -250,37 +289,7 @@ export default function Chat() {
         if (chatField.current) {
           chatField.current.scrollTop = chatField.current.scrollHeight;
         }
-        if (userData![chatRoom!]["token"] != '') {
-          axios.post(
-            'https://fcm.googleapis.com/fcm/send',
-            {
-              to: userData![chatRoom!]["token"],
-              notification: {
-                title: `${myData!["nickName"]}`,
-                body: `${chat}`,
-                android_channel_id: `${hashCode(uid!)}`,
-                sound: 'alert.wav',
-              },
-              aps: {
-                title: `${myData!["nickName"]}`,
-                body: chat,
-                badge: 1,
-              },
-              priority: 'high',
-              data: {
-                click_action: 'FLUTTER_NOTIFICATION_CLICK',
-                id: `${hashCode(uid!)}`,
-                status: 'done',
-              },
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `key=${process.env.NEXT_PUBLIC_SERVER_KEY}`,
-              },
-            }
-          );
-        }
+        sendAlert(chat)
       } catch (e) {
         alert(`채팅을 전송하는 중 오류가 발생했습니다: ${e}`)
       }
@@ -318,38 +327,10 @@ export default function Chat() {
             })
           })
         ]);
-
-        if (userData![chatRoom!]["token"] != '') {
-          axios.post(
-            'https://fcm.googleapis.com/fcm/send',
-            {
-              to: userData![chatRoom!]["token"],
-              notification: {
-                title: `${myData!["nickName"]}`,
-                body: '이미지를 보냈습니다.',
-                android_channel_id: `${hashCode(uid!)}`,
-                sound: 'alert.wav',
-              },
-              aps: {
-                title: `${myData!["nickName"]}`,
-                body: chat,
-                badge: 1,
-              },
-              priority: 'high',
-              data: {
-                click_action: 'FLUTTER_NOTIFICATION_CLICK',
-                id: `${hashCode(uid!)}`,
-                status: 'done',
-              },
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `key=${process.env.NEXT_PUBLIC_SERVER_KEY}`,
-              },
-            }
-          );
+        if (chatField.current) {
+          chatField.current.scrollTop = chatField.current.scrollHeight;
         }
+        sendAlert('이미지를 보냈습니다.')
       } catch (e) {
         alert(`사진을 전송 하는 중 문제가 발생하였습니다:${e}`)
       }
@@ -370,6 +351,12 @@ export default function Chat() {
 
   const chatField = useRef<HTMLDivElement | null>(null);
 
+  const changeScrollLoc = () => {
+    setChatFieldScrollTop(chatField.current!.scrollTop);
+    console.log(chatField.current!.scrollTop);
+    console.log(chatField.current!.scrollHeight - window.innerHeight - 40);
+  }
+
   useEffect(() => {
     getUid();
   }, []);
@@ -380,7 +367,10 @@ export default function Chat() {
 
   useEffect(() => {
     if (chatField.current) {
-      chatField.current.scrollTop = chatField.current.scrollHeight;
+      chatField.current.addEventListener('scroll', changeScrollLoc)
+      setTimeout(() => {
+        chatField.current!.scrollTop = chatField.current!.scrollHeight;
+      }, 500)
     }
   }, [chatRoom])
 
@@ -440,6 +430,16 @@ export default function Chat() {
                 <Image className={style.sendPic} src="/images/chat/icon_plus.svg" alt="사진 보내기" width={35} height={35} />
               </label>
               <input className={style.sendChat} onKeyPress={(event) => { if (event.key == 'Enter') { sendChat(); } }} value={chat} onChange={(e) => setChat(e.target.value)} placeholder={userData![chatRoom].hasOwnProperty("deleted") ? "탈퇴한 사용자와 대화할 수 없습니다." : "Enter를 눌러 메시지 보내기"} disabled={userData![chatRoom].hasOwnProperty("deleted")} />
+              {
+                chatFieldScrollTop < chatField.current!.scrollHeight - ((window.innerHeight - 120 - 70) * 0.8) - 300 ?
+                  <div className={style.down} onClick={() => {
+                    if (chatField.current) {
+                      chatField.current!.scrollTop = chatField.current!.scrollHeight;
+                    }
+                  }}>
+                    <Image className={style.downImg} src="/images/chat/icon_scroll_down.svg" alt="채팅창 아래로 내리기" width={25} height={12} />
+                  </div> : null
+              }
             </div>
             : null
         }

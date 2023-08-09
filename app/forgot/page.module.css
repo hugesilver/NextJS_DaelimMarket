@@ -2,8 +2,8 @@
   width: 1240px;
   margin: 0 auto;
   padding: 0 20px;
-  padding-top: 160px;
-  min-height: calc(100vh - 160px);
+  padding-top: 165px;
+  min-height: calc(100vh - 165px);
   display: flex;
   flex-direction: column;
   position: relative;

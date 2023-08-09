@@ -62,7 +62,6 @@ export default function Login() {
     <article className={style.article}>
       <div className={style.form}>
         <h1 className={style.title}>로그인</h1>
-
         <div className={style.formDiv}>
           <input className={style.input} onChange={(event) => { setEmail(event.target.value); }} placeholder="이메일" type="email" />
           <span>@email.daelim.ac.kr</span>
