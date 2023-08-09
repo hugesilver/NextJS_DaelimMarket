@@ -1,34 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 대림마켓
 
-## Getting Started
+<img src="https://github.com/team-ilpalsam/NextJS_DaelimMarket/blob/main/readme/daelimmarket_textless.png" width="300px" height="300px" />
+[ 2023년 1학기 캡스톤디자인 프로젝트 ]
+<br />
+우리들만의 작은 장터, 대림마켓
+<br />
+대림대학교만을 위한 중고거래 웹 프로젝트
 
-First, run the development server:
+## Contributors
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/hugesilver">
+        <img src="https://avatars.githubusercontent.com/u/44265544?v=4" width="120px" height="auto" >
+        <br>
+        <p>hugesilver</p>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>Project Manager</b></td>
+  </tr>
+</table>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Technology Stack
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/team-ilpalsam/NextJS_DaelimMarket/blob/main/readme/npm_logo.png" width="120px" height="auto">
+    </td>
+    <td align="center">
+      <img src="https://github.com/team-ilpalsam/NextJS_DaelimMarket/blob/main/readme/nextjs_logo.png" width="120px" height="auto">
+    </td>
+    <td align="center">
+      <img src="https://github.com/team-ilpalsam/NextJS_DaelimMarket/blob/main/readme/typescript_logo.png" width="120px" height="auto">
+    </td>
+    <td align="center">
+      <img src="https://github.com/team-ilpalsam/NextJS_DaelimMarket/blob/main/readme/firebase_logo.png" width="120px" height="auto">
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>NPM</b></td>
+    <td align="center"><b>Next.js</b></td>
+    <td align="center"><b>Typescript</b></td>
+    <td align="center"><b>Firebase</b></td>
+  </tr>
+</table>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Dependencies
+* axios: ^1.4.0
+* date-fns: ^2.30.0
+* firebase: ^10.0.0
+* typescript: 5.1.6

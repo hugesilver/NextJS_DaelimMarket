@@ -39,7 +39,7 @@ export default function Chat() {
             if (document.exists()) {
               const { read_time, ...list } = document.data();
               setReadTimeData(read_time);
-              const alignResult: any = {};
+              const alignResult: { [key: string]: any } = {};
               const alignList = Object.entries(list)
                 .sort((a, b) => {
                   if (a[1].length > 0 && b[1].length > 0) {
@@ -78,7 +78,7 @@ export default function Chat() {
   const returnUserData = async () => {
     Object.keys(chatData!).forEach(async (key) => {
       const data = await getUserData(key);
-      const newData: any = {};
+      const newData: { [key: string]: any } = {};
       newData[key] = data;
       setUserData((prev: any) => ({ ...prev, ...newData }))
     })
@@ -353,8 +353,6 @@ export default function Chat() {
 
   const changeScrollLoc = () => {
     setChatFieldScrollTop(chatField.current!.scrollTop);
-    console.log(chatField.current!.scrollTop);
-    console.log(chatField.current!.scrollHeight - window.innerHeight - 40);
   }
 
   useEffect(() => {
@@ -431,7 +429,7 @@ export default function Chat() {
               </label>
               <input className={style.sendChat} onKeyPress={(event) => { if (event.key == 'Enter') { sendChat(); } }} value={chat} onChange={(e) => setChat(e.target.value)} placeholder={userData![chatRoom].hasOwnProperty("deleted") ? "탈퇴한 사용자와 대화할 수 없습니다." : "Enter를 눌러 메시지 보내기"} disabled={userData![chatRoom].hasOwnProperty("deleted")} />
               {
-                chatFieldScrollTop < chatField.current!.scrollHeight - ((window.innerHeight - 120 - 70) * 0.8) - 300 ?
+                chatFieldScrollTop < chatField.current!.scrollHeight - ((window.innerHeight - 125 - 70 - 75) * 0.8) * 2 ?
                   <div className={style.down} onClick={() => {
                     if (chatField.current) {
                       chatField.current!.scrollTop = chatField.current!.scrollHeight;
