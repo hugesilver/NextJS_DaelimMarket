@@ -47,7 +47,7 @@
   </tr>
 </table>
 
-## Dependencies
+## Packages
 * axios: ^1.4.0
 * date-fns: ^2.30.0
 * firebase: ^10.0.0
