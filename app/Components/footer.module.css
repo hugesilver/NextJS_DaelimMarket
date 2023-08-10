@@ -27,4 +27,6 @@
 
 .footerGithubLogo{
   height: 25px;
+  cursor: pointer;
+  pointer-events: all;
 }
