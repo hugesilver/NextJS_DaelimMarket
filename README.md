@@ -1,6 +1,6 @@
 # 대림마켓
 
-<img src="https://github.com/team-ilpalsam/NextJS_DaelimMarket/blob/main/readme/daelimmarket_textless.png" width="300px" height="300px" />
+<img src="https://github.com/team-ilpalsam/NextJS_DaelimMarket/blob/main/readme/daelimmarket_colored.jpg" width="300px" height="300px" />
 [ 2023년 여름방학 프로젝트 ]
 <br />
 우리들만의 작은 장터, 대림마켓
@@ -8,6 +8,7 @@
 대림대학교만을 위한 중고거래 웹 프로젝트
 
 ## Contributors
+
 <table>
   <tr>
     <td align="center">
@@ -24,6 +25,7 @@
 </table>
 
 ## Technology Stack
+
 <table>
   <tr>
     <td align="center">
@@ -48,7 +50,8 @@
 </table>
 
 ## Packages
-* axios: ^1.4.0
-* date-fns: ^2.30.0
-* firebase: ^10.0.0
-* typescript: 5.1.6
+
+- axios: ^1.4.0
+- date-fns: ^2.30.0
+- firebase: ^10.0.0
+- typescript: 5.1.6
