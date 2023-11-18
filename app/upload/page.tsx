@@ -347,8 +347,9 @@ export default function Upload() {
       />
       <button
         className={style.button}
+        style={{ backgroundColor: isLoading ? "#CDCDCD" : "#00A5D9" }}
         onClick={() => {
-          if (isLoading == false) {
+          if (!isLoading) {
             const confirm = window.confirm(`정말로 업로드하시겠습니까?`);
             if (confirm) {
               onClickUpload();

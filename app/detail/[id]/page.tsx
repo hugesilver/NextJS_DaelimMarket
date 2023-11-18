@@ -58,7 +58,7 @@ export default function Detail({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     getPostedUserInfo();
-  }, [uid, document]);
+  }, [document]);
 
   const changeStatus = async (event: any) => {
     setStatus(event.target.value);
@@ -146,14 +146,15 @@ export default function Detail({ params }: { params: { id: string } }) {
   const onClickGoToChat = async () => {
     if (uid != null && document != null) {
       await getDoc(doc(db, "chat", uid!)).then(async (value: DocumentData) => {
-        if (value[`${document!["uid"]}`] != undefined) {
+        if (value.data()[document!["uid"]] == undefined) {
           await updateDoc(doc(db, "chat", uid!), {
             [document!["uid"]]: [],
           });
         }
       });
     }
-    router.push("/chat");
+
+    router.push(`/chat?target=${document!["uid"]}`);
   };
 
   const getPostedUserInfo = async () => {

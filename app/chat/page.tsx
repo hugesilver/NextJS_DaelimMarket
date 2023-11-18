@@ -3,8 +3,17 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import style from "./page.module.css";
 import { db, getUserUid } from "../Firebase";
-import { useRouter } from "next/navigation";
-import { DocumentData, Timestamp, arrayUnion, collection, deleteField, doc, getDoc, onSnapshot, serverTimestamp, updateDoc } from "firebase/firestore";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  DocumentData,
+  Timestamp,
+  arrayUnion,
+  deleteField,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Image from "next/image";
@@ -13,44 +22,54 @@ import axios from "axios";
 
 export default function Chat() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [uid, setUid] = useState<string | null>(null);
   const [myData, setMyData] = useState<DocumentData | null>([]);
   const [chatData, setChatData] = useState<DocumentData | null>([]);
   const [readTimeData, setReadTimeData] = useState<DocumentData | null>([]);
   const [chatRoom, setChatRoom] = useState<string | null>(null);
   const [userData, setUserData] = useState<{ [key: string]: any }>({});
-  const [chat, setChat] = useState<string>('');
+  const [chat, setChat] = useState<string>("");
   const [chatFieldScrollTop, setChatFieldScrollTop] = useState<number>(0);
+
+  const setTarget = () => {
+    if (searchParams.has("target")) {
+      setChatRoom(searchParams.get("target"));
+    }
+    console.log(chatRoom);
+  };
 
   const getUid = async () => {
     try {
       await getUserUid().then((value) => {
-        if (value == null) {
-          alert('로그인이 필요합니다.');
-          router.push('/');
+        if (value === null) {
+          alert("로그인이 필요합니다.");
+          router.push("/");
         } else {
           setUid(value);
-          getDoc(doc(db, 'user', value)).then((value) => {
+          getDoc(doc(db, "user", value)).then((value) => {
             if (value.exists()) {
               setMyData(value.data());
             }
-          })
-          onSnapshot(doc(db, 'chat', value), (document) => {
+          });
+          onSnapshot(doc(db, "chat", value), (document) => {
             if (document.exists()) {
               const { read_time, ...list } = document.data();
               setReadTimeData(read_time);
               const alignResult: { [key: string]: any } = {};
-              const alignList = Object.entries(list)
-                .sort((a, b) => {
-                  if (a[1].length > 0 && b[1].length > 0) {
-                    return b[1][b[1].length - 1]['send_time'] - a[1][a[1].length - 1]['send_time'];
-                  } else {
-                    return Number.MAX_VALUE;
-                  }
-                });
+              const alignList = Object.entries(list).sort((a, b) => {
+                if (a[1].length > 0 && b[1].length > 0) {
+                  return (
+                    b[1][b[1].length - 1]["send_time"] -
+                    a[1][a[1].length - 1]["send_time"]
+                  );
+                } else {
+                  return Number.MAX_VALUE;
+                }
+              });
               alignList.forEach(([key, value]) => {
                 alignResult[key] = value;
-              })
+              });
               setChatData(alignResult);
             } else {
               setChatData(null);
@@ -58,144 +77,202 @@ export default function Chat() {
             }
           });
         }
-      })
+      });
     } catch (e) {
       alert(`chat 페이지에서 유저 채팅 정보를 불러오다가 오류 발생: ${e}`);
     }
     console.log("uid를 불러옴.");
-  }
+  };
 
   const getUserData = async (user: string) => {
     try {
-      const data = (await getDoc(doc(db, 'user', user))).data();
+      const data = (await getDoc(doc(db, "user", user))).data();
       return data;
     } catch (e) {
       alert(`채팅 유저 목록을 불러오는 도중 오류가 발생했습니다: ${e}`);
       return null;
     }
-  }
+  };
 
   const returnUserData = async () => {
     Object.keys(chatData!).forEach(async (key) => {
       const data = await getUserData(key);
       const newData: { [key: string]: any } = {};
       newData[key] = data;
-      setUserData((prev: any) => ({ ...prev, ...newData }))
-    })
-  }
+      setUserData((prev: any) => ({ ...prev, ...newData }));
+      if (key === searchParams.get("target")) {
+        setTarget();
+      }
+    });
+  };
 
   const getListElement = (user: string) => {
     if (chatData != null) {
       return (
-        <div className={style.listDiv} key={user} onClick={() => { setChatRoom(user) }} style={{ backgroundColor: user == chatRoom ? "#E6E6E6" : "#FFFFFF" }}>
+        <div
+          className={style.listDiv}
+          key={user}
+          onClick={() => {
+            setChatRoom(user);
+          }}
+          style={{ backgroundColor: user === chatRoom ? "#E6E6E6" : "#FFFFFF" }}
+        >
           <div className={style.userProfile}>
-            {
-              userData![user]["profile_image"] != '' ?
-                (
-                  <img className={style.userProfileImg} src={userData![user]["profile_image"]} alt={`${userData!["nickName"]}의 프로필 이미지`} />
-                )
-                : null
-            }
+            {userData![user]["profile_image"] != "" ? (
+              <img
+                className={style.userProfileImg}
+                src={userData![user]["profile_image"]}
+                alt={`${userData!["nickName"]}의 프로필 이미지`}
+              />
+            ) : null}
           </div>
           <div className={style.userInfo}>
-            <p>{userData![user].hasOwnProperty("deleted") ? "탈퇴한 사용자" : userData![user]["nickName"]}</p>
+            <p>
+              {userData![user].hasOwnProperty("deleted")
+                ? "탈퇴한 사용자"
+                : userData![user]["nickName"]}
+            </p>
             <p>
               {(() => {
                 if (chatData![user] != undefined) {
                   if (chatData![user].length > 0) {
-                    switch (chatData![user][chatData![user].length - 1]["type"]) {
+                    switch (
+                      chatData![user][chatData![user].length - 1]["type"]
+                    ) {
                       case "text":
-                        return chatData![user][chatData![user].length - 1]["text"];
+                        return chatData![user][chatData![user].length - 1][
+                          "text"
+                        ];
                       case "image":
                         return "이미지를 보냈습니다.";
                       default:
                         return "메시지를 보냈습니다.";
                     }
                   } else {
-                    return "첫 대화를 시작해봐요!"
+                    return "첫 대화를 시작해봐요!";
                   }
                 }
-
               })()}
             </p>
           </div>
-          {
-            chatData![user] != null && chatData[user].length > 0 && readTimeData![`${uid}-${user}`] != null ?
-              chatData![user][chatData![user].length - 1]["sender"] != uid && chatData![user!][chatData![user].length - 1]["send_time"].toDate() >= readTimeData![`${uid}-${user}`].toDate() ?
-                <div className={style.redDot} /> :
-                null
-              : null
-          }
+          {chatData![user] != null &&
+          chatData[user].length > 0 &&
+          readTimeData![`${uid}-${user}`] != null ? (
+            chatData![user][chatData![user].length - 1]["sender"] != uid &&
+            chatData![user!][chatData![user].length - 1][
+              "send_time"
+            ].toDate() >= readTimeData![`${uid}-${user}`].toDate() ? (
+              <div className={style.redDot} />
+            ) : null
+          ) : null}
         </div>
       );
     }
-  }
+  };
 
   const read = () => {
-    updateDoc(doc(db, 'chat', uid!), {
-      'read_time': {
+    updateDoc(doc(db, "chat", uid!), {
+      read_time: {
         ...readTimeData,
-        [`${uid}-${chatRoom}`]: Timestamp.fromMillis(Date.now())
-      }
+        [`${uid}-${chatRoom}`]: Timestamp.fromMillis(Date.now()),
+      },
     });
-    updateDoc(doc(db, 'chat', chatRoom!), {
-      'read_time': {
+    updateDoc(doc(db, "chat", chatRoom!), {
+      read_time: {
         ...readTimeData,
-        [`${uid}-${chatRoom}`]: Timestamp.fromMillis(Date.now())
-      }
+        [`${uid}-${chatRoom}`]: Timestamp.fromMillis(Date.now()),
+      },
     });
-  }
+  };
 
   const returnChatElement = (index: number) => {
     const getChat = () => {
-      if (chatData![chatRoom!][index]["sender"] == uid) {
+      if (chatData![chatRoom!][index]["sender"] === uid) {
         return (
           <div className={style.rightChat}>
-            {
-              chatData![chatRoom!][index]["type"] == "text" ?
-                <span className={style.rightBubble}>{chatData![chatRoom!][index]["text"]}</span> :
-                chatData![chatRoom!][index]["type"] == "image" ?
-                  <img className={style.rightBubble} src={chatData![chatRoom!][index]["image"]} /> :
-                  null
-            }
+            {chatData![chatRoom!][index]["type"] === "text" ? (
+              <span className={style.rightBubble}>
+                {chatData![chatRoom!][index]["text"]}
+              </span>
+            ) : chatData![chatRoom!][index]["type"] === "image" ? (
+              <img
+                className={style.rightBubble}
+                src={chatData![chatRoom!][index]["image"]}
+              />
+            ) : null}
             <div className={style.rightInfo}>
-              {
-                readTimeData![`${chatRoom}-${uid}`] != null && chatData![chatRoom!][index]["send_time"].toDate() <= readTimeData![`${chatRoom}-${uid}`].toDate() ?
-                  <span className={style.chatGrey}>읽음</span>
-                  : <span className={style.chatGrey}>전송됨</span>
-              }
-              {
-                index == chatData![chatRoom!].length - 1 || chatData![chatRoom!][index + 1]["sender"] != chatData![chatRoom!][index]["sender"] || chatData![chatRoom!][index + 1]["send_time"].toDate().getMinutes() != chatData![chatRoom!][index]["send_time"].toDate().getMinutes() ?
-                  <span className={style.chatGrey}>{format(chatData![chatRoom!][index]["send_time"].toDate(), 'hh:mm', { locale: ko })}</span>
-                  : null
-              }
+              {readTimeData![`${chatRoom}-${uid}`] != null &&
+              chatData![chatRoom!][index]["send_time"].toDate() <=
+                readTimeData![`${chatRoom}-${uid}`].toDate() ? (
+                <span className={style.chatGrey}>읽음</span>
+              ) : (
+                <span className={style.chatGrey}>전송됨</span>
+              )}
+              {index === chatData![chatRoom!].length - 1 ||
+              chatData![chatRoom!][index + 1]["sender"] !=
+                chatData![chatRoom!][index]["sender"] ||
+              chatData![chatRoom!][index + 1]["send_time"]
+                .toDate()
+                .getMinutes() !=
+                chatData![chatRoom!][index]["send_time"]
+                  .toDate()
+                  .getMinutes() ? (
+                <span className={style.chatGrey}>
+                  {format(
+                    chatData![chatRoom!][index]["send_time"].toDate(),
+                    "hh:mm",
+                    { locale: ko }
+                  )}
+                </span>
+              ) : null}
             </div>
           </div>
         );
       } else {
         return (
           <div className={style.leftChat}>
-            {
-              chatData![chatRoom!][index]["type"] == "text" ?
-                <span className={style.leftBubble}>{chatData![chatRoom!][index]["text"]}</span> :
-                chatData![chatRoom!][index]["type"] == "image" ?
-                  <img className={style.leftBubble} src={chatData![chatRoom!][index]["image"]} /> :
-                  null
-            }
-            {
-              index == chatData![chatRoom!].length - 1 || chatData![chatRoom!][index + 1]["sender"] != chatData![chatRoom!][index]["sender"] || chatData![chatRoom!][index + 1]["send_time"].toDate().getMinutes() != chatData![chatRoom!][index]["send_time"].toDate().getMinutes() ?
-                <span className={style.chatGrey}>{format(chatData![chatRoom!][index]["send_time"].toDate(), 'hh:mm', { locale: ko })}</span>
-                : null
-            }
+            {chatData![chatRoom!][index]["type"] === "text" ? (
+              <span className={style.leftBubble}>
+                {chatData![chatRoom!][index]["text"]}
+              </span>
+            ) : chatData![chatRoom!][index]["type"] === "image" ? (
+              <img
+                className={style.leftBubble}
+                src={chatData![chatRoom!][index]["image"]}
+              />
+            ) : null}
+            {index === chatData![chatRoom!].length - 1 ||
+            chatData![chatRoom!][index + 1]["sender"] !=
+              chatData![chatRoom!][index]["sender"] ||
+            chatData![chatRoom!][index + 1]["send_time"]
+              .toDate()
+              .getMinutes() !=
+              chatData![chatRoom!][index]["send_time"].toDate().getMinutes() ? (
+              <span className={style.chatGrey}>
+                {format(
+                  chatData![chatRoom!][index]["send_time"].toDate(),
+                  "hh:mm",
+                  { locale: ko }
+                )}
+              </span>
+            ) : null}
           </div>
         );
       }
-    }
+    };
 
-    if (chatData![chatRoom!] != null && index == chatData![chatRoom!].length - 1) {
-      if (chatData![chatRoom!][chatData![chatRoom!].length - 1]["sender"] != uid) {
-        if (readTimeData![`${uid}-${chatRoom}`] == undefined ||
-          chatData![chatRoom!][chatData![chatRoom!].length - 1]["send_time"].toDate() > readTimeData![`${uid}-${chatRoom}`].toDate()
+    if (
+      chatData![chatRoom!] != null &&
+      index === chatData![chatRoom!].length - 1
+    ) {
+      if (
+        chatData![chatRoom!][chatData![chatRoom!].length - 1]["sender"] != uid
+      ) {
+        if (
+          readTimeData![`${uid}-${chatRoom}`] === undefined ||
+          chatData![chatRoom!][chatData![chatRoom!].length - 1][
+            "send_time"
+          ].toDate() > readTimeData![`${uid}-${chatRoom}`].toDate()
         ) {
           read();
           console.log("읽음 처리 중");
@@ -203,21 +280,27 @@ export default function Chat() {
       }
     }
 
-    if (index == 0 || chatData![chatRoom!][index - 1]["send_time"].toDate().getDate() != chatData![chatRoom!][index]["send_time"].toDate().getDate()) {
+    if (
+      index === 0 ||
+      chatData![chatRoom!][index - 1]["send_time"].toDate().getDate() !=
+        chatData![chatRoom!][index]["send_time"].toDate().getDate()
+    ) {
       return (
         <>
-          <p className={style.day}>{format(chatData![chatRoom!][index]["send_time"].toDate(), 'yyyy년 M월 d일 EEEE', { locale: ko })}</p>
+          <p className={style.day}>
+            {format(
+              chatData![chatRoom!][index]["send_time"].toDate(),
+              "yyyy년 M월 d일 EEEE",
+              { locale: ko }
+            )}
+          </p>
           {getChat()}
         </>
       );
     } else {
-      return (
-        <>
-          {getChat()}
-        </>
-      );
+      return <>{getChat()}</>;
     }
-  }
+  };
 
   const hashCode = (str: string) => {
     let hash = 0;
@@ -226,36 +309,36 @@ export default function Chat() {
       hash = (hash << 5) - hash + char;
     }
     return hash;
-  }
+  };
 
   const sendAlert = async (body: string) => {
     try {
-      if (userData![chatRoom!]["token"] != '') {
+      if (userData![chatRoom!]["token"] != "") {
         await axios.post(
-          'https://fcm.googleapis.com/fcm/send',
+          "https://fcm.googleapis.com/fcm/send",
           {
             to: userData![chatRoom!]["token"],
             notification: {
               title: `${myData!["nickName"]}`,
               body: `${body}`,
               android_channel_id: `${hashCode(uid!)}`,
-              sound: 'alert.wav',
+              sound: "alert.wav",
             },
             aps: {
               title: `${myData!["nickName"]}`,
               body: `${body}`,
               badge: 1,
             },
-            priority: 'high',
+            priority: "high",
             data: {
-              click_action: 'FLUTTER_NOTIFICATION_CLICK',
+              click_action: "FLUTTER_NOTIFICATION_CLICK",
               id: `${hashCode(uid!)}`,
-              status: 'done',
+              status: "done",
             },
           },
           {
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
               Authorization: `key=${process.env.NEXT_PUBLIC_SERVER_KEY}`,
             },
           }
@@ -264,183 +347,225 @@ export default function Chat() {
     } catch (e) {
       alert(`알림을 전송하는 중 오류가 발생하였습니다: ${e}`);
     }
-  }
+  };
 
   const sendChat = async () => {
-    if (chat != '') {
+    if (chat != "") {
       try {
-        setChat('');
-        await updateDoc(doc(db, 'chat', uid!), {
+        setChat("");
+        await updateDoc(doc(db, "chat", uid!), {
           [chatRoom!]: arrayUnion({
-            'type': 'text',
-            'send_time': Timestamp.fromMillis(Date.now()),
-            'sender': uid,
-            'text': chat,
-          })
-        })
-        await updateDoc(doc(db, 'chat', chatRoom!), {
+            type: "text",
+            send_time: Timestamp.fromMillis(Date.now()),
+            sender: uid,
+            text: chat,
+          }),
+        });
+        await updateDoc(doc(db, "chat", chatRoom!), {
           [uid!]: arrayUnion({
-            'type': 'text',
-            'send_time': Timestamp.fromMillis(Date.now()),
-            'sender': uid,
-            'text': chat,
-          })
-        })
+            type: "text",
+            send_time: Timestamp.fromMillis(Date.now()),
+            sender: uid,
+            text: chat,
+          }),
+        });
         if (chatField.current) {
           chatField.current.scrollTop = chatField.current.scrollHeight;
         }
-        sendAlert(chat)
+        sendAlert(chat);
       } catch (e) {
-        alert(`채팅을 전송하는 중 오류가 발생했습니다: ${e}`)
+        alert(`채팅을 전송하는 중 오류가 발생했습니다: ${e}`);
       }
     }
-
-  }
+  };
 
   const sendPic = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e != null) {
       try {
-        const pic = e.target.files![0]
+        const pic = e.target.files![0];
 
         const storage = getStorage();
 
-        const fileName = `chat_${format(Date.now(), 'yyyyMMddHHmmss')}.${pic!.name.split('.').pop()}`;
+        const fileName = `chat_${format(
+          Date.now(),
+          "yyyyMMddHHmmss"
+        )}.${pic!.name.split(".").pop()}`;
         const storageRef = ref(storage, `chat/${uid}/${fileName}`);
         const snapshot = await uploadBytes(storageRef, pic);
         const url = await getDownloadURL(snapshot.ref);
 
         await Promise.all([
-          updateDoc(doc(db, 'chat', uid!), {
+          updateDoc(doc(db, "chat", uid!), {
             [chatRoom!]: arrayUnion({
-              'type': 'image',
-              'send_time': Timestamp.fromMillis(Date.now()),
-              'sender': uid,
-              'image': url,
-            })
+              type: "image",
+              send_time: Timestamp.fromMillis(Date.now()),
+              sender: uid,
+              image: url,
+            }),
           }),
-          updateDoc(doc(db, 'chat', chatRoom!), {
+          updateDoc(doc(db, "chat", chatRoom!), {
             [uid!]: arrayUnion({
-              'type': 'image',
-              'send_time': Timestamp.fromMillis(Date.now()),
-              'sender': uid,
-              'image': url,
-            })
-          })
+              type: "image",
+              send_time: Timestamp.fromMillis(Date.now()),
+              sender: uid,
+              image: url,
+            }),
+          }),
         ]);
         if (chatField.current) {
           chatField.current.scrollTop = chatField.current.scrollHeight;
         }
-        sendAlert('이미지를 보냈습니다.')
+        sendAlert("이미지를 보냈습니다.");
       } catch (e) {
-        alert(`사진을 전송 하는 중 문제가 발생하였습니다:${e}`)
+        alert(`사진을 전송 하는 중 문제가 발생하였습니다:${e}`);
       }
     }
-  }
+  };
 
   const leaveChatRoom = async () => {
     try {
-      await updateDoc(doc(db, 'chat', uid!), {
-        [chatRoom!]: deleteField()
+      await updateDoc(doc(db, "chat", uid!), {
+        [chatRoom!]: deleteField(),
       });
     } catch (e) {
       alert(`채팅방을 나가는 도중 오류가 발생하였습니다.`);
       console.log(e);
     }
-
-  }
+  };
 
   const chatField = useRef<HTMLDivElement | null>(null);
 
   const changeScrollLoc = () => {
     setChatFieldScrollTop(chatField.current!.scrollTop);
-  }
+  };
 
   useEffect(() => {
     getUid();
   }, []);
 
   useEffect(() => {
-    returnUserData()
+    returnUserData();
   }, [chatData]);
 
   useEffect(() => {
     if (chatField.current) {
-      chatField.current.addEventListener('scroll', changeScrollLoc)
+      chatField.current.addEventListener("scroll", changeScrollLoc);
       setTimeout(() => {
         chatField.current!.scrollTop = chatField.current!.scrollHeight;
-      }, 500)
+      }, 500);
     }
-  }, [chatRoom])
+  }, [chatRoom]);
 
   return (
     <article className={style.article}>
       <section className={style.listSection}>
         <>
-          {
-            userData != null ?
-              Object.keys(userData).map((user) => {
+          {userData != null
+            ? Object.keys(userData).map((user) => {
                 return getListElement(user);
               })
-              : null
-          }
+            : null}
         </>
       </section>
       <div className={style.line}></div>
       <section className={style.chatSection}>
-        {
-          chatData != null && chatRoom != null ?
-            <div className={style.chatInfo}>
+        {chatData != null && chatRoom != null ? (
+          <div className={style.chatInfo}>
+            <div>
               <div>
-                <div>
+                {chatData[chatRoom] ? (
                   <img src={userData![chatRoom]["profile_image"]} />
-                </div>
-                <span>{userData![chatRoom].hasOwnProperty("deleted") ? "탈퇴한 사용자" : userData![chatRoom]["nickName"]}</span>
+                ) : null}
               </div>
-              <span className={style.out} onClick={() => {
-                const confirm = window.confirm(`정말로 채팅방을 나가시겠습니까?`);
+              <span>
+                {userData![chatRoom].hasOwnProperty("deleted")
+                  ? "탈퇴한 사용자"
+                  : userData![chatRoom]["nickName"]}
+              </span>
+            </div>
+            <span
+              className={style.out}
+              onClick={() => {
+                const confirm =
+                  window.confirm(`정말로 채팅방을 나가시겠습니까?`);
                 if (confirm) {
                   leaveChatRoom();
                   setChatRoom(null);
                   location.reload();
                 }
-              }}>나가기</span>
-            </div>
-            : null
-        }
+              }}
+            >
+              나가기
+            </span>
+          </div>
+        ) : null}
         <div className={style.chatField} ref={chatField}>
-          {
-            chatData != null && chatRoom != null ?
-              chatData[chatRoom!].map((_: object, index: number) => {
-                return (
-                  <>
-                    {returnChatElement(index)}
-                  </>
-                );
+          {chatData != null && chatRoom != null
+            ? chatData[chatRoom!].map((_: object, index: number) => {
+                return <>{returnChatElement(index)}</>;
               })
-              : null
-          }
+            : null}
         </div>
-        {
-          chatData != null && chatRoom != null ?
-            <div className={style.chatInput}>
-              <input className={style.inputFile} type="file" style={{ display: "none" }} accept="image/*" id="file" onChange={(e) => { sendPic(e); }} />
-              <label className={style.label} htmlFor="file">
-                <Image className={style.sendPic} src="/images/chat/icon_plus.svg" alt="사진 보내기" width={35} height={35} />
-              </label>
-              <input className={style.sendChat} onKeyPress={(event) => { if (event.key == 'Enter') { sendChat(); } }} value={chat} onChange={(e) => setChat(e.target.value)} placeholder={userData![chatRoom].hasOwnProperty("deleted") ? "탈퇴한 사용자와 대화할 수 없습니다." : "Enter를 눌러 메시지 보내기"} disabled={userData![chatRoom].hasOwnProperty("deleted")} />
-              {
-                chatFieldScrollTop < chatField.current!.scrollHeight - ((window.innerHeight - 125 - 70 - 75) * 0.8) * 2 ?
-                  <div className={style.down} onClick={() => {
-                    if (chatField.current) {
-                      chatField.current!.scrollTop = chatField.current!.scrollHeight;
-                    }
-                  }}>
-                    <Image className={style.downImg} src="/images/chat/icon_scroll_down.svg" alt="채팅창 아래로 내리기" width={25} height={12} />
-                  </div> : null
+        {chatData != null && chatRoom != null ? (
+          <div className={style.chatInput}>
+            <input
+              className={style.inputFile}
+              type="file"
+              style={{ display: "none" }}
+              accept="image/*"
+              id="file"
+              onChange={(e) => {
+                sendPic(e);
+              }}
+            />
+            <label className={style.label} htmlFor="file">
+              <Image
+                className={style.sendPic}
+                src="/images/chat/icon_plus.svg"
+                alt="사진 보내기"
+                width={35}
+                height={35}
+              />
+            </label>
+            <input
+              className={style.sendChat}
+              onKeyPress={(event) => {
+                if (event.key === "Enter") {
+                  sendChat();
+                }
+              }}
+              value={chat}
+              onChange={(e) => setChat(e.target.value)}
+              placeholder={
+                userData![chatRoom].hasOwnProperty("deleted")
+                  ? "탈퇴한 사용자와 대화할 수 없습니다."
+                  : "Enter를 눌러 메시지 보내기"
               }
-            </div>
-            : null
-        }
+              disabled={userData![chatRoom].hasOwnProperty("deleted")}
+            />
+            {chatFieldScrollTop <
+            chatField.current!.scrollHeight -
+              (window.innerHeight - 125 - 70 - 75) * 0.8 * 2 ? (
+              <div
+                className={style.down}
+                onClick={() => {
+                  if (chatField.current) {
+                    chatField.current!.scrollTop =
+                      chatField.current!.scrollHeight;
+                  }
+                }}
+              >
+                <Image
+                  className={style.downImg}
+                  src="/images/chat/icon_scroll_down.svg"
+                  alt="채팅창 아래로 내리기"
+                  width={25}
+                  height={12}
+                />
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </section>
     </article>
   );

@@ -36,8 +36,8 @@
   width: 216px;
   height: 216px;
   flex-shrink: 0;
-  border: 2px dashed #1C1C1C;
-  background: #FFFFFF;
+  border: 2px dashed #1c1c1c;
+  background: #ffffff;
   position: relative;
 }
 
@@ -48,7 +48,7 @@
   object-position: center;
 }
 
-.deleteImg{
+.deleteImg {
   position: absolute;
   top: -15px;
   right: -15px;
@@ -69,8 +69,8 @@
   height: 25px;
   flex-shrink: 0;
   border-radius: 5px;
-  background: #00A5D9;
-  color: #FFFFFF;
+  background: #00a5d9;
+  color: #ffffff;
   justify-content: center;
   align-items: center;
   font-size: 21px;
@@ -84,8 +84,8 @@
   width: 100%;
   height: 50px;
   flex-shrink: 0;
-  border: 2px solid #1C1C1C;
-  background: #FFFFFF;
+  border: 2px solid #1c1c1c;
+  background: #ffffff;
   -o-appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -93,7 +93,7 @@
   outline: none;
   padding: 0;
   padding-left: 20px;
-  color: #1C1C1C;
+  color: #1c1c1c;
   font-size: 32px;
   font-weight: 500;
 }
@@ -103,8 +103,8 @@
   width: 200px;
   height: 50px;
   flex-shrink: 0;
-  border: 2px solid #1C1C1C;
-  background: #FFFFFF;
+  border: 2px solid #1c1c1c;
+  background: #ffffff;
   -o-appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -112,7 +112,7 @@
   outline: none;
   padding: 0;
   padding-left: 20px;
-  color: #1C1C1C;
+  color: #1c1c1c;
   font-size: 32px;
   font-weight: 500;
 }
@@ -129,8 +129,8 @@
   width: 220px;
   height: 50px;
   flex-shrink: 0;
-  background: #FFFFFF;
-  border: 2px solid #1C1C1C;
+  background: #ffffff;
+  border: 2px solid #1c1c1c;
   position: relative;
 }
 
@@ -151,7 +151,7 @@
   position: relative;
 
   padding-left: 20px;
-  color: #1C1C1C;
+  color: #1c1c1c;
   font-size: 32px;
   font-weight: 500;
   cursor: pointer;
@@ -171,8 +171,8 @@
   width: 100%;
   height: 400px;
   flex-shrink: 0;
-  border: 2px solid #1C1C1C;
-  background: #FFFFFF;
+  border: 2px solid #1c1c1c;
+  background: #ffffff;
   -o-appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -181,7 +181,7 @@
   padding: 0;
   padding-top: 10px;
   padding-left: 20px;
-  color: #1C1C1C;
+  color: #1c1c1c;
   font-size: 32px;
   font-weight: 500;
   resize: none;
@@ -195,10 +195,9 @@
   height: 65px;
   flex-shrink: 0;
   border-radius: 10px;
-  background: #00A5D9;
   border: 0;
   outline: 0;
-  color: #FFFFFF;
+  color: #ffffff;
   text-align: center;
   font-size: 24px;
   font-weight: 600;
